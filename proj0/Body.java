@@ -70,4 +70,14 @@ public class Body {
         return total;
     }
 
+    /** update position */
+    public void update(double dt, double xforce, double yforce) {
+        double ax = xforce / this.mass;
+        double ay = yforce / this.mass;
+        this.xxVel = this.xxVel + ax * dt;
+        this.yyVel = this.yyVel + ay * dt;
+        this.xxPos = this.xxPos + this.xxVel * dt;
+        this.yyPos = this.yyPos + this.yyVel * dt;   
+    }
+
 }
