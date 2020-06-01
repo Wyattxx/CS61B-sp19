@@ -50,19 +50,19 @@ public class Body {
         return calcForceExertedBy(b) * dy / calcDistance(b);
     }
 
-    public double calcNetForceExertedByX(Body[] allBodys) {
+    public double calcNetForceExertedByX(Body[] allBodies) {
         double total = 0;
-        for (Body b: allBodys) {
-            if (!this.equals(b)) {
+        for (Body b: allBodies) {
+            if (!this.equals(b)) { //except pairing itself
                 total = total + this.calcForceExertedByX(b);
             }
         }
         return total;   
     }
 
-    public double calcNetForceExertedByY(Body[] allBodys) {
+    public double calcNetForceExertedByY(Body[] allBodies) {
         double total = 0;
-        for (Body b: allBodys) {
+        for (Body b: allBodies) {
             if (!this.equals(b)) {
                 total = total + this.calcForceExertedByY(b);
             }
@@ -78,6 +78,16 @@ public class Body {
         this.yyVel = this.yyVel + ay * dt;
         this.xxPos = this.xxPos + this.xxVel * dt;
         this.yyPos = this.yyPos + this.yyVel * dt;   
+    }
+
+    /** draw the planet at its position */
+    public void draw() {
+        //StdDraw.enableDoubleBuffering();
+		//StdDraw.setScale(-100, 100);
+		StdDraw.picture(this.xxPos, this.yyPos, "images/" + this.imgFileName);
+		//StdDraw.show();
+        //StdDraw.pause(2000);
+        
     }
 
 }
