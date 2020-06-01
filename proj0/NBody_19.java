@@ -11,11 +11,11 @@ public class NBody {
     }
 
     /** return an array of the bodys in path.txt */
-    public static Planet[] readBodies(String path) {
+    public static Body[] readBodies(String path) {
         In in = new In(path);
         int num_of_planets = in.readInt();
         double radius = in.readDouble();
-        Planet[] allBodies = new Planet[5]; // need to use new to init!
+        Body[] allBodies = new Body[5]; // need to use new to init!
         for (int i = 0; i < 5; i++) {
             double xP = in.readDouble();
             double yP = in.readDouble();
@@ -23,7 +23,7 @@ public class NBody {
             double yV = in.readDouble();
             double m = in.readDouble();
             String img = in.readString();
-            allBodies[i] = new Planet(xP, yP, xV, yV, m, img); // remember to check the index
+            allBodies[i] = new Body(xP, yP, xV, yV, m, img); // remember to check the index
         }
         return allBodies;
     }
@@ -34,19 +34,19 @@ public class NBody {
         double dt = Double.parseDouble(args[1]);
         String filename = args[2];
         double radius = readRadius(filename);
-        Planet[] allBodies = readBodies(filename);
+        Body[] allBodies = readBodies(filename);
 
         for (double t = 0; t <= T; t = t + dt) {
             double[] xForces = new double[5];
             double[] yForces = new double[5];
             int i = 0;
-            for (Planet b : allBodies) {
+            for (Body b : allBodies) {
                 xForces[i] = b.calcNetForceExertedByX(allBodies);
                 yForces[i] = b.calcNetForceExertedByY(allBodies);
                 i++;
             }
             i = 0;
-            for (Planet b : allBodies) {
+            for (Body b : allBodies) {
                 b.update(dt, xForces[i], yForces[i]);
                 i++;
             }
@@ -59,7 +59,7 @@ public class NBody {
             StdDraw.clear();
             StdDraw.picture(0, 0, imageToDraw);
             /** draw many planets */
-            for (Planet b : allBodies) {
+            for (Body b : allBodies) {
                 b.draw();
             }
             StdDraw.show();
