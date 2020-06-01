@@ -11,7 +11,7 @@ public class NBody {
     }
 
     /** return an array of the bodys in path.txt */
-    public static Planet[] readBodies(String path) {
+    public static Planet[] readPlanets(String path) {
         In in = new In(path);
         int num_of_planets = in.readInt();
         double radius = in.readDouble();
@@ -34,7 +34,7 @@ public class NBody {
         double dt = Double.parseDouble(args[1]);
         String filename = args[2];
         double radius = readRadius(filename);
-        Planet[] allBodies = readBodies(filename);
+        Planet[] allBodies = readPlanets(filename);
 
         for (double t = 0; t <= T; t = t + dt) {
             double[] xForces = new double[5];
