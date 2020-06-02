@@ -15,8 +15,8 @@ public class NBody {
         In in = new In(path);
         int num_of_planets = in.readInt();
         double radius = in.readDouble();
-        Body[] allBodies = new Body[5]; // need to use new to init!
-        for (int i = 0; i < 5; i++) {
+        Body[] allBodies = new Body[num_of_planets]; // need to use new to init!
+        for (int i = 0; i < num_of_planets; i++) {
             double xP = in.readDouble();
             double yP = in.readDouble();
             double xV = in.readDouble();
@@ -37,8 +37,8 @@ public class NBody {
         Body[] allBodies = readBodies(filename);
 
         for (double t = 0; t <= T; t = t + dt) {
-            double[] xForces = new double[5];
-            double[] yForces = new double[5];
+            double[] xForces = new double[allBodies.length];
+            double[] yForces = new double[allBodies.length];
             int i = 0;
             for (Body b : allBodies) {
                 xForces[i] = b.calcNetForceExertedByX(allBodies);
