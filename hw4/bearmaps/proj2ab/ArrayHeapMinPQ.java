@@ -1,4 +1,4 @@
-package bearmaps;
+package bearmaps.proj2ab;
 
 import java.util.HashMap;
 import java.util.NoSuchElementException;
@@ -110,7 +110,7 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
      */
     private void swim(int index) {
         // Throws an exception if index is invalid. DON'T CHANGE THIS LINE.
-        //validateSinkSwimArg(index);
+        validateSinkSwimArg(index);
         if (index == 1) { //root node
             return;
         }
@@ -231,12 +231,27 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
         size -= 1;
         if (size > 0) {
             sink(1);
+
         }
+        //add size > 16
         if (size > 16 && (double) size / contents.length < 0.25) {
             resize(contents.length / 2);
         }
         return min;
     }
+
+    /**
+     * Helper function to resize the backing array when necessary.
+     */
+    private void resize(int capacity) {
+        Node[] temp = new ArrayHeapMinPQ.Node[capacity];
+        //should be size, not contents.length, !!!should be i <= size
+        for (int i = 1; i <= size; i++) {
+            temp[i] = contents[i];
+        }
+        contents = temp;
+    }
+
 
     /**
      * Returns the number of items in the PQ. This is one less than the size
@@ -247,6 +262,13 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
     public int size() {
         return size;
     }
+
+
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+
 
     /**
      * Change the node in this heap with the given item to have the given
@@ -272,16 +294,6 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
 
     }
 
-    /**
-     * Helper function to resize the backing array when necessary.
-     */
-    private void resize(int capacity) {
-        Node[] temp = new ArrayHeapMinPQ.Node[capacity];
-        for (int i = 1; i < size; i++) {
-            temp[i] = contents[i];
-        }
-        contents = temp;
-    }
 
 //    /**
 //     * Prints out the heap sideways. Provided for you.
@@ -313,20 +325,20 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
 //    }
 //
 //
-//    /**
-//     * Throws an exception if the index is invalid for sinking or swimming.
-//     */
-//    private void validateSinkSwimArg(int index) {
-//        if (index < 1) {
-//            throw new IllegalArgumentException("Cannot sink or swim nodes with index 0 or less");
-//        }
-//        if (index > size) {
-//            throw new IllegalArgumentException("Cannot sink or swim nodes with index greater than current size.");
-//        }
-//        if (contents[index] == null) {
-//            throw new IllegalArgumentException("Cannot sink or swim a null node.");
-//        }
-//    }
+    /**
+     * Throws an exception if the index is invalid for sinking or swimming.
+     */
+    private void validateSinkSwimArg(int index) {
+        if (index < 1) {
+            throw new IllegalArgumentException("Cannot sink or swim nodes with index 0 or less");
+        }
+        if (index > size) {
+            throw new IllegalArgumentException("Cannot sink or swim nodes with index greater than current size.");
+        }
+        if (contents[index] == null) {
+            throw new IllegalArgumentException("Cannot sink or swim a null node.");
+        }
+    }
 
 
 }
