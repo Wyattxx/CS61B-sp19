@@ -171,7 +171,7 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
     private int getDepth(double requestLonDPP) {
         double dLonDPP = (ROOT_LRLON - ROOT_ULLON) / 256; //LonDPP of img d0
         int depth = 0;
-        while (dLonDPP >= requestLonDPP && depth < 7) {
+        while (dLonDPP > requestLonDPP && depth < 7) {
             dLonDPP = dLonDPP / 2;
             depth += 1;
         }
