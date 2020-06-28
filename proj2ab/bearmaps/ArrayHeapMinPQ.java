@@ -277,7 +277,7 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
      */
     private void resize(int capacity) {
         Node[] temp = new ArrayHeapMinPQ.Node[capacity];
-        for (int i = 1; i < size; i++) {
+        for (int i = 1; i <= size; i++) {
             temp[i] = contents[i];
         }
         contents = temp;

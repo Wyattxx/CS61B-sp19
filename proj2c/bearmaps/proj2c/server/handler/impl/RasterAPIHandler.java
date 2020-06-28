@@ -17,8 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static bearmaps.proj2c.utils.Constants.SEMANTIC_STREET_GRAPH;
-import static bearmaps.proj2c.utils.Constants.ROUTE_LIST;
+import static bearmaps.proj2c.utils.Constants.*;
 
 /**
  * Handles requests from the web browser for map images. These images
@@ -84,12 +83,99 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
      */
     @Override
     public Map<String, Object> processRequest(Map<String, Double> requestParams, Response response) {
-        //System.out.println("yo, wanna know the parameters given by the web browser? They are:");
-        //System.out.println(requestParams);
-        Map<String, Object> results = new HashMap<>();
-        System.out.println("Since you haven't implemented RasterAPIHandler.processRequest, nothing is displayed in "
-                + "your browser.");
+
+        //get requestParams
+        double lrlon =  requestParams.get("lrlon");
+        double ullon =  requestParams.get("ullon");
+        double w =  requestParams.get("w");
+        double h =  requestParams.get("h");
+        double ullat =  requestParams.get("ullat");
+        double lrlat =  requestParams.get("lrlat");
+
+        //calculate which level of map to use
+        double lonDPP = (lrlon - ullon) / w;
+        int depth = getDepth(lonDPP);
+
+        //choose the proper map set
+        Map<String, Object> results = getResults(depth, ullon, ullat, lrlon, lrlat);
+
+        System.out.println(results);
         return results;
+    }
+
+    /**
+     * choose the proper map set
+     */
+    private Map<String, Object> getResults(int depth, double ullon, double ullat, double lrlon, double lrlat) {
+
+        double tileNum = Math.pow(2, depth); //number of grids each row and column in this depth
+        double widthPerTile = (ROOT_LRLON - ROOT_ULLON) / tileNum;
+        double heightPerTile = (ROOT_ULLAT - ROOT_LRLAT) / tileNum;
+
+        //calculate the grid index of the sub-maps
+        int leftX = (int) Math.floor((ullon - ROOT_ULLON) / widthPerTile);
+        int rightX = (int) Math.floor((lrlon - ROOT_ULLON) / widthPerTile);
+        int upperY = (int) Math.floor((ROOT_ULLAT - ullat) / heightPerTile);
+        int lowerY = (int) Math.floor((ROOT_ULLAT - lrlat) / heightPerTile);
+        leftX = saturnGridIndex(leftX, (int) tileNum);
+        rightX = saturnGridIndex(rightX, (int) tileNum);
+        upperY = saturnGridIndex(upperY, (int) tileNum);
+        lowerY = saturnGridIndex(lowerY, (int) tileNum);
+
+        //generate the img string matrix of the grid map files
+        String[][] renderGrid = new String[lowerY - upperY + 1][rightX - leftX + 1];
+        for (int i = 0; i < lowerY - upperY + 1; i++) {
+            for (int j = 0; j < rightX - leftX + 1; j++) {
+                renderGrid[i][j] = "d" + depth + "_x" + (j + leftX) + "_y" + (i + upperY) + ".png";
+            }
+        }
+
+        //calculate the boundary of the raster map
+        double raster_ul_lon = ROOT_ULLON + widthPerTile * leftX;
+        double raster_lr_lon = ROOT_ULLON + widthPerTile * (rightX + 1);
+        double raster_ul_lat = ROOT_ULLAT - heightPerTile * upperY;
+        double raster_lr_lat = ROOT_ULLAT - heightPerTile * (lowerY + 1);
+
+        //return params
+        Map<String, Object> results = new HashMap<>();
+        results.put("render_grid", renderGrid);
+        results.put("raster_ul_lon", raster_ul_lon);
+        results.put("raster_lr_lon", raster_lr_lon);
+        results.put("raster_ul_lat", raster_ul_lat);
+        results.put("raster_lr_lat", raster_lr_lat);
+        results.put("depth", depth);
+
+        //no coverage case
+        //boolean queryOutOfScope = ullon > ROOT_LRLON || lrlon < ROOT_ULLON || ullat < ROOT_LRLAT || lrlat > ROOT_ULLAT;
+        boolean queryIllegal = ullon > lrlon || ullat < lrlat;
+        if (queryIllegal) {
+            results.put("query_success", false);
+        } else {
+            results.put("query_success", true);
+        }
+
+        return results;
+    }
+
+    /** saturn the boundary when query box is out of scope */
+    private int saturnGridIndex(int coordinate, int tileNum) {
+        if (coordinate < 0) coordinate = 0;
+        if (coordinate > tileNum - 1) coordinate = tileNum - 1;
+        return coordinate;
+    }
+
+    /**
+     * calculate which level of map to use
+     * Have the greatest LonDPP that is less than or equal to the LonDPP of the query box
+     */
+    private int getDepth(double requestLonDPP) {
+        double dLonDPP = (ROOT_LRLON - ROOT_ULLON) / 256; //LonDPP of img d0
+        int depth = 0;
+        while (dLonDPP >= requestLonDPP && depth < 7) {
+            dLonDPP = dLonDPP / 2;
+            depth += 1;
+        }
+        return depth;
     }
 
     @Override
