@@ -51,7 +51,7 @@ public class WeirdSolver<Vertex> implements ShortestPathsSolver<Vertex> {
                 if (iliillililil < ililllililil) {
                     ilililil.put(ililillil, ililllilil);
                     lllilili.put(ililillil, ililililil(ilililllili) + ililllilili.getOrDefault(ilililllili, ililllilil.weight()) + ililllilili.getOrDefault(ilililllili, 0.0));
-                    double priority = iliilill.estimatedDistanceToGoal(ililillil, ililllil) + ililililil(ililillil) + ililllilili.getOrDefault(ililillil, 0.0);;
+                    double priority = iliilill.estimatedDistanceToGoal(ililillil, ililllil) + ililililil(ililillil) + ililllilili.getOrDefault(ililillil, 0.0);
                     if (!ilililllili.equals(ilililllilil)) {
                         break;
                     }

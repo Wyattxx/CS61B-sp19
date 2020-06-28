@@ -40,7 +40,7 @@ public class AStarSolver<Vertex> implements ShortestPathsSolver<Vertex> {
 
             //dequeue the best vertex v from PQ
             Vertex v = PQ.removeSmallest();
-            numStatesExplored ++;
+            numStatesExplored++;
 
             // reach the final goal
             if (v.equals(goal)) {
@@ -67,7 +67,7 @@ public class AStarSolver<Vertex> implements ShortestPathsSolver<Vertex> {
                 //relax(w);
                 if (distTo.get(from) + weight < distTo.get(to)) {
                     distTo.put(to, distTo.get(from) + weight);
-                    edgeTo.put(to, from);//在这里更新edge，后面应该是from，不是v
+                    edgeTo.put(to, from); //在这里更新edge，后面应该是from，不是v
                     //!!!!!!!!!!PROBLEM FOUND
                     if (PQ.contains(to)) {
                         PQ.changePriority(to, distTo.get(to) + heuristicValue.get(to));

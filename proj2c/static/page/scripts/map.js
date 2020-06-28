@@ -315,7 +315,7 @@ $(function() {
     /* Make search bar do autocomplete things */
     $('#tags').autocomplete({
           source: search,
-          minLength: 2,
+          minLength: 1,
           select: function (event, ui) {
               $.get({
                   async: true,
@@ -328,7 +328,7 @@ $(function() {
                           console.log(data[i]);
                           const ele = $('<img/>', {
                               id: "marker_" + data[i].id,
-                              src: 'round_marker.gif',
+                              src: 'test.gif',
                               class: 'rmarker'
                           });
                           ele.appendTo($('#markers'));
