@@ -78,20 +78,20 @@ public class MyTrieSet implements TrieSet61B {
         return keys;
     }
 
-    /** Returns a list of all the words after Node p in the trie, doesn't include p */
-    private List<String> collect(Node p) {
-        List<String> keysList = new LinkedList<>();
-        for (char ch: p.children.keySet()) {
-            keysList = collect(ch + "", p.children.get(ch), keysList);
-        }
-        return keysList;
-    }
-
     /** Returns a list of all the words after Node p with PREFIX str, doesn't include p */
     private List<String> collect(String str, Node p, List<String> keysList) {
         if (p.isKey) keysList.add(str);
         for (char ch: p.children.keySet()) {
             keysList = collect(str + ch, p.children.get(ch), keysList);
+        }
+        return keysList;
+    }
+
+    /** Returns a list of all the words after Node p in the trie, doesn't include p */
+    private List<String> collect(Node p) {
+        List<String> keysList = new LinkedList<>();
+        for (char ch: p.children.keySet()) {
+            keysList = collect(ch + "", p.children.get(ch), keysList);
         }
         return keysList;
     }
