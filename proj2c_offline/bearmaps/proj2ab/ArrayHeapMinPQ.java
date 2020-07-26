@@ -14,6 +14,7 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
      * the first item is at 1, the last item is at size, the ith item is at index i
      */
     private Node[] contents;
+    private int[] xxx;
     private int size;
     private HashMap<T, Integer> myItemMapIndex;
 
@@ -40,6 +41,7 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
 
     public ArrayHeapMinPQ() {
         contents = new ArrayHeapMinPQ.Node[16];
+        xxx = new int[16];
         myItemMapIndex = new HashMap<>();
 
         /* Add a dummy item at the front of the ArrayHeap so that the getLeft,
